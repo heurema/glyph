@@ -1,0 +1,9 @@
+{
+  "name": "amber",
+  "prompt_color": "\u001b[33;1m",
+  "output_color": "\u001b[33m",
+  "comment_color": "\u001b[33;2m",
+  "highlight_color": "\u001b[93m",
+  "agg_theme": "solarized-dark",
+  "agg_font_size": 16
+}

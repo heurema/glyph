@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'command -v agg >/dev/null 2>&1 || echo \"[glyph] agg not found. Install: brew install agg (macOS) or cargo install agg. Needed for GIF output.\"'",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "config": {
+    "cols": 100,
+    "rows": 30,
+    "shell_prompt": "$ ",
+    "app_prompt": "> ",
+    "theme": "default",
+    "title": "Full Demo",
+    "seed": 42
+  },
+  "beats": [
+    {"type": "shell", "command": "npm install demo", "output": ["added 5 packages"], "pause_after": 1.0},
+    {"type": "app", "app_name": "demo", "command": "/run", "output": ["Running...", "Done!"], "pause_after": 2.0},
+    {"type": "comment", "text": "# All done"},
+    {"type": "clear"},
+    {"type": "pause", "duration": 1.5}
+  ]
+}

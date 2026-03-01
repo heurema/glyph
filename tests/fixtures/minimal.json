@@ -1,0 +1,6 @@
+{
+  "version": "1.0",
+  "beats": [
+    {"type": "shell", "command": "echo hello", "output": ["hello"]}
+  ]
+}

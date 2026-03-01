@@ -1,0 +1,15 @@
+{
+  "name": "glyph",
+  "description": "Generate terminal demo GIFs from natural language descriptions. Synthetic asciicast recordings with PII audit — no real commands executed.",
+  "version": "0.1.0",
+  "author": {
+    "name": "heurema"
+  },
+  "homepage": "https://github.com/heurema/glyph",
+  "repository": "https://github.com/heurema/glyph",
+  "license": "MIT",
+  "keywords": ["terminalcast", "gif", "demo", "asciicast", "recording"],
+  "status": "active",
+  "owner": "heurema",
+  "tags": ["devtools", "demo", "gif"]
+}

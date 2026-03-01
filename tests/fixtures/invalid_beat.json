@@ -1,0 +1,6 @@
+{
+  "version": "1.0",
+  "beats": [
+    {"type": "unknown_type", "data": "bad"}
+  ]
+}

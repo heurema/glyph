@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "beats": [
+    {"type": "shell", "command": "cat /Users/john/.ssh/config", "output": ["Host github.com"]},
+    {"type": "shell", "command": "echo sk-abc123", "output": ["sk-abc123"]},
+    {"type": "comment", "text": "# user@gmail.com"}
+  ]
+}

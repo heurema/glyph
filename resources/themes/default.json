@@ -1,0 +1,9 @@
+{
+  "name": "default",
+  "prompt_color": "\u001b[1m",
+  "output_color": "\u001b[0m",
+  "comment_color": "\u001b[90m",
+  "highlight_color": "\u001b[32m",
+  "agg_theme": "monokai",
+  "agg_font_size": 16
+}
