@@ -8,8 +8,5 @@
   "homepage": "https://github.com/heurema/glyph",
   "repository": "https://github.com/heurema/glyph",
   "license": "MIT",
-  "keywords": ["terminalcast", "gif", "demo", "asciicast", "recording"],
-  "status": "active",
-  "owner": "heurema",
-  "tags": ["devtools", "demo", "gif"]
+  "keywords": ["terminalcast", "gif", "demo", "asciicast", "recording"]
 }
