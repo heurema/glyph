@@ -33,6 +33,7 @@ def build_gif(
     cast_path: Path,
     gif_path: Path,
     theme: ThemeConfig | None = None,
+    scene_config: object | None = None,
 ) -> Path:
     """Convert .cast file to .gif using agg.
 
@@ -48,6 +49,24 @@ def build_gif(
     if theme:
         cmd.extend(["--theme", theme.agg_theme])
         cmd.extend(["--font-size", str(theme.agg_font_size)])
+
+    # Pass-through agg flags from scene config
+    if scene_config:
+        cfg = scene_config
+        if getattr(cfg, "speed", None):
+            cmd.extend(["--speed", str(cfg.speed)])
+        if getattr(cfg, "fps_cap", None):
+            cmd.extend(["--fps-cap", str(cfg.fps_cap)])
+        if getattr(cfg, "idle_time_limit", None):
+            cmd.extend(["--idle-time-limit", str(cfg.idle_time_limit)])
+        if getattr(cfg, "last_frame_duration", None):
+            cmd.extend(["--last-frame-duration", str(cfg.last_frame_duration)])
+        if getattr(cfg, "no_loop", False):
+            cmd.append("--no-loop")
+        if getattr(cfg, "font_family", None):
+            cmd.extend(["--font-family", cfg.font_family])
+        if getattr(cfg, "line_height", None):
+            cmd.extend(["--line-height", str(cfg.line_height)])
 
     try:
         result = subprocess.run(

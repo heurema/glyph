@@ -44,16 +44,16 @@ def _write_cast(events: list[Event], path: Path, cols: int, rows: int, title: st
             f.write(json.dumps([event.time, event.type, event.data]) + "\n")
 
 
-def _try_build_gif(cast_path: Path, gif_path: Path, theme: ThemeConfig) -> Path | None:
+def _try_build_gif(cast_path: Path, gif_path: Path, theme: ThemeConfig, scene_config: object | None = None) -> Path | None:
     """Attempt GIF conversion. Returns None if agg unavailable."""
     try:
-        return build_gif(cast_path, gif_path, theme)
+        return build_gif(cast_path, gif_path, theme, scene_config)
     except AggError as e:
         log.warning("GIF conversion skipped: %s", e)
         return None
 
 
-def run(scene_path: Path, output_dir: Path) -> RunResult:
+def run(scene_path: Path, output_dir: Path, theme_override: str | None = None) -> RunResult:
     """Run the full pipeline: validate -> render -> audit -> write -> gif.
 
     Returns RunResult with success status and artifacts.
@@ -74,8 +74,8 @@ def run(scene_path: Path, output_dir: Path) -> RunResult:
         result.errors.append(f"Schema validation failed: {e}")
         return result
 
-    # 3. Load theme
-    theme = load_theme(scene.config.theme)
+    # 3. Load theme (CLI override takes precedence)
+    theme = load_theme(theme_override or scene.config.theme)
 
     # 4. Render
     try:
@@ -88,7 +88,7 @@ def run(scene_path: Path, output_dir: Path) -> RunResult:
     result.duration = events[-1].time if events else 0.0
 
     # 5. PII audit — BEFORE writing any files
-    findings = audit(events)
+    findings = audit(events, allow=scene.config.pii_allow)
     result.pii_findings = findings
     if findings:
         patterns = ", ".join(f.pattern for f in findings)
@@ -101,9 +101,9 @@ def run(scene_path: Path, output_dir: Path) -> RunResult:
     _write_cast(events, cast_path, scene.config.cols, scene.config.rows, scene.config.title)
     result.cast_path = cast_path
 
-    # 7. Build GIF
+    # 7. Build GIF (pass scene config for agg flags)
     gif_path = output_dir / f"{scene_path.stem}.gif"
-    result.gif_path = _try_build_gif(cast_path, gif_path, theme)
+    result.gif_path = _try_build_gif(cast_path, gif_path, theme, scene.config)
 
     result.success = True
     return result

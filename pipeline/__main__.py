@@ -19,7 +19,7 @@ def main() -> int:
 
     args = parser.parse_args()
 
-    result = run(args.scene, args.output)
+    result = run(args.scene, args.output, theme_override=args.theme)
 
     if result.pii_findings:
         print(f"ERROR: PII detected ({len(result.pii_findings)} findings):", file=sys.stderr)

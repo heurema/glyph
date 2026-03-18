@@ -42,12 +42,19 @@ def _is_exempt(data: str, pattern: str, pos: int) -> bool:
     return False
 
 
-def audit(events: list[Event]) -> list[Finding]:
-    """Scan events for PII/secret patterns. Returns list of findings."""
+def audit(events: list[Event], allow: list[str] | None = None) -> list[Finding]:
+    """Scan events for PII/secret patterns. Returns list of findings.
+
+    Args:
+        allow: patterns to suppress (e.g. ["password", "secret"] for CLI demos).
+    """
+    allow_lower = {p.lower() for p in (allow or [])}
     findings: list[Finding] = []
     for idx, event in enumerate(events):
         data_lower = event.data.lower()
         for pattern in PII_PATTERNS:
+            if pattern.lower() in allow_lower:
+                continue
             pattern_lower = pattern.lower()
             pos = data_lower.find(pattern_lower)
             if pos == -1:

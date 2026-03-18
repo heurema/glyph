@@ -9,7 +9,18 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from .errors import SchemaError
 
 MAX_BEATS = 50
-MAX_DURATION_S = 120.0
+MAX_DURATION_S = 180.0
+
+
+class ColoredLine(BaseModel):
+    """A single output line with optional ANSI color."""
+
+    text: str
+    color: str | None = None  # ANSI name: red, green, yellow, blue, magenta, cyan, dim, bold
+
+
+# Output line: plain string or colored object
+OutputLine = Union[str, ColoredLine]
 
 
 class SceneConfig(BaseModel):
@@ -22,21 +33,33 @@ class SceneConfig(BaseModel):
     theme: str = "default"
     title: str = "Demo"
     seed: int | None = None
+    # agg pass-through options
+    speed: float | None = None
+    fps_cap: int | None = None
+    idle_time_limit: float | None = None
+    last_frame_duration: float | None = None
+    no_loop: bool = False
+    font_family: str | None = None
+    line_height: float | None = None
+    # PII
+    pii_allow: list[str] = Field(default_factory=list)
 
 
 class ShellBeat(BaseModel):
     type: Literal["shell"]
     command: str
-    output: list[str] = Field(default_factory=list)
+    output: list[OutputLine] = Field(default_factory=list)
     pause_after: float = 1.0
+    typing_speed: float | None = None  # override CHAR_DELAY
 
 
 class AppBeat(BaseModel):
     type: Literal["app"]
     app_name: str
     command: str
-    output: list[str] = Field(default_factory=list)
+    output: list[OutputLine] = Field(default_factory=list)
     pause_after: float = 2.0
+    typing_speed: float | None = None
 
 
 class ClearBeat(BaseModel):

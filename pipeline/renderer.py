@@ -6,7 +6,7 @@ import random
 from dataclasses import dataclass
 
 from .errors import RenderError
-from .schema import AppBeat, ClearBeat, CommentBeat, PauseBeat, Scene, ShellBeat
+from .schema import AppBeat, ClearBeat, ColoredLine, CommentBeat, OutputLine, PauseBeat, Scene, ShellBeat
 from .themes import ThemeConfig
 
 CHAR_DELAY = 0.065
@@ -14,6 +14,21 @@ CHAR_JITTER = 0.025
 LINE_PAUSE = 0.4
 OUTPUT_LINE_DELAY = 0.02
 RESET = "\x1b[0m"
+
+ANSI_COLORS: dict[str, str] = {
+    "red": "\x1b[31m",
+    "green": "\x1b[32m",
+    "yellow": "\x1b[33m",
+    "blue": "\x1b[34m",
+    "magenta": "\x1b[35m",
+    "cyan": "\x1b[36m",
+    "white": "\x1b[37m",
+    "dim": "\x1b[2m",
+    "bold": "\x1b[1m",
+    "bold_red": "\x1b[1;31m",
+    "bold_green": "\x1b[1;32m",
+    "bold_yellow": "\x1b[1;33m",
+}
 
 
 @dataclass
@@ -39,11 +54,12 @@ class CastWriter:
     def output(self, text: str) -> None:
         self.events.append(Event(round(self.time, 6), "o", text))
 
-    def type_text(self, text: str) -> None:
+    def type_text(self, text: str, char_delay: float | None = None) -> None:
+        delay = char_delay or CHAR_DELAY
         for ch in text:
             self.output(ch)
             jitter = self._rng.uniform(-CHAR_JITTER, CHAR_JITTER)
-            self.advance(CHAR_DELAY + jitter)
+            self.advance(delay + jitter)
 
     def newline(self) -> None:
         self.output("\r\n")
@@ -54,22 +70,32 @@ class CastWriter:
             self.output(line + "\r\n")
             self.advance(OUTPUT_LINE_DELAY)
 
+    def print_output_lines(self, lines: list[OutputLine], default_color: str) -> None:
+        """Print output lines with per-line color support."""
+        for line in lines:
+            if isinstance(line, ColoredLine):
+                color = ANSI_COLORS.get(line.color or "", default_color)
+                self.output(f"{color}{line.text}{RESET}\r\n")
+            else:
+                self.output(f"{default_color}{line}{RESET}\r\n")
+            self.advance(OUTPUT_LINE_DELAY)
+
 
 def _emit_shell(w: CastWriter, beat: ShellBeat, theme: ThemeConfig) -> None:
     w.output(f"{theme.prompt_color}$ {RESET}")
-    w.type_text(beat.command)
+    w.type_text(beat.command, char_delay=beat.typing_speed)
     w.newline()
     if beat.output:
-        w.print_lines([f"{theme.output_color}{line}{RESET}" for line in beat.output])
+        w.print_output_lines(beat.output, theme.output_color)
     w.advance(beat.pause_after)
 
 
 def _emit_app(w: CastWriter, beat: AppBeat, theme: ThemeConfig) -> None:
     w.output(f"{theme.highlight_color}>{RESET} ")
-    w.type_text(beat.command)
+    w.type_text(beat.command, char_delay=beat.typing_speed)
     w.newline()
     if beat.output:
-        w.print_lines([f"{theme.output_color}{line}{RESET}" for line in beat.output])
+        w.print_output_lines(beat.output, theme.output_color)
     w.advance(beat.pause_after)
 
 
