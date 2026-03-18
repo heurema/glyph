@@ -46,7 +46,7 @@ description → scene JSON → asciicast v2 → PII audit → .cast → agg → 
     "seed": 42
   },
   "beats": [
-    {"type": "shell", "command": "cargo build", "output": ["Compiling myapp v0.1.0"], "pause_after": 1.0},
+    {"type": "shell", "command": "cargo build", "output": ["Compiling myapp v0.2.0"], "pause_after": 1.0},
     {"type": "comment", "text": "# Build complete"},
     {"type": "pause", "duration": 2.0},
     {"type": "clear"}
