@@ -1,8 +1,20 @@
-# Glyph
+```
+          __            __
+   ____ _/ /_  ______  / /_
+  / __ `/ / / / / __ \/ __ \
+ / /_/ / / /_/ / /_/ / / / /
+ \__, /_/\__, / .___/_/ /_/
+/____/  /____/_/
+```
 
-Generate terminal demo GIFs from natural language descriptions. No real commands executed — everything is synthetic.
+**Generate terminal demo GIFs from natural language.**
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) plugin that creates polished asciicast recordings with realistic typing, configurable themes, and built-in PII auditing.
+[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-5b21b6?style=flat-square)]()
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+> No real commands executed — everything is synthetic. Polished asciicast recordings with realistic typing, configurable themes, and built-in PII auditing.
+
+---
 
 ## Install
 
